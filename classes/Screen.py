@@ -1,6 +1,7 @@
 from pygame.display import flip as display_flip
 from pygame.font import Font
 from pygame import Surface, gfxdraw
+from random import randint
 
 class Screen:
     def __init__(self, window, type, sprite_size=15, labyrinthe=None):
@@ -33,12 +34,18 @@ class Screen:
                     gfxdraw.aacircle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [255, 0, 0])
                     gfxdraw.filled_circle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [255, 0, 0])
                 elif symbol.isdigit():
-                    elem.fill([0, 150, 0])
-                    txt = myfont.render(symbol, 1, (255, 255, 255))
-                    size_x, size_y = myfont.size(symbol)
-                    offset_1 = (sprite_size - size_x) // 2
-                    offset_2 = (sprite_size - size_y) // 2 + 1
-                    elem.blit(txt, (offset_1, offset_2))
+                    for i in range(0, sprite_size):
+                        for j in range(0, sprite_size):
+                            pixel = Surface((1,1))
+                            pixel.fill([randint(0, 255), randint(0, 255), randint(0, 255)])
+                            elem.blit(pixel, (i, j))
+
+                    #elem.fill([0, 150, 0])
+                    #txt = myfont.render(symbol, 1, (255, 255, 255))
+                    ##size_x, size_y = myfont.size(symbol)
+                    #offset_1 = (sprite_size - size_x) // 2
+                    #offset_2 = (sprite_size - size_y) // 2 + 1
+                    #elem.blit(txt, (offset_1, offset_2))
 
                 self.window.blit(elem, (col*sprite_size, index*sprite_size))
 
