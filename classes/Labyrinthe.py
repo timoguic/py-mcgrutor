@@ -23,8 +23,11 @@ class Labyrinthe:
             o = LabObject(i, self)
 
         self.player = Player(self)
-        
+        self.set_symbol('B', self.num_lines-1, self.num_cols-1)
+        self.set_symbol(' ', self.num_lines-2, self.num_cols-1)
+        self.set_symbol(' ', self.num_lines-1, self.num_cols-2)
 
+        
     def set_symbol(self, symbol, line, column):
         self.level[line][column] = symbol
 

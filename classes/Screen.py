@@ -20,6 +20,8 @@ class Screen:
         elif self.type == 'game_screen':
             self.display_game(**kwargs)
 
+        display_flip()
+
     def display_game(self, **kwargs):
         sprite_size = self.sprite_size
         myfont = Font(None, int(sprite_size * 1.2))
@@ -30,9 +32,12 @@ class Screen:
                 elem.fill([255, 255, 255])
                 if symbol == 'X':
                     elem.fill([0, 0, 0])
-                elif symbol == 'M':
+                elif symbol == 'B':
                     gfxdraw.aacircle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [255, 0, 0])
                     gfxdraw.filled_circle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [255, 0, 0])
+                elif symbol == 'M':
+                    gfxdraw.aacircle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [0, 0, 0])
+                    gfxdraw.filled_circle(elem, sprite_size//2, sprite_size//2, sprite_size//2 - 3, [0, 0, 0])
                 elif symbol.isdigit():
                     for i in range(0, sprite_size):
                         for j in range(0, sprite_size):
@@ -49,7 +54,7 @@ class Screen:
 
                 self.window.blit(elem, (col*sprite_size, index*sprite_size))
 
-        footer = Surface((self.labyrinthe.num_cols*sprite_size, sprite_size))
+        footer = Surface(((self.labyrinthe.num_cols-5)*sprite_size, sprite_size))
 
         for i in self.labyrinthe.player.items:
             gfxdraw.aacircle(footer, int(i)*sprite_size, sprite_size//2, sprite_size//2 - 1, [255, 255,255])     
@@ -59,4 +64,9 @@ class Screen:
             footer.blit(txt_surface, (int(i)*sprite_size-(txt_size[0]//2), (sprite_size-txt_size[1])//2 +1))
 
         self.window.blit(footer, (0, (self.labyrinthe.num_lines-1)*sprite_size))
-        display_flip()
+            
+    def display_init(self, **kwargs):
+        self.window.fill([0, 0, 255])
+
+    def display_end(self, **kwargs):
+        self.window.fill([0, 255, 0])
