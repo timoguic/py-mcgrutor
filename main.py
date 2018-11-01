@@ -20,7 +20,7 @@ if __name__ == '__main__':
         sprite_size = int(config['McGyver'].get('sprite_size'))
         num_objects = int(config['McGyver'].get('num_objects'))
 
-        window = pygame.display.set_mode((cols*sprite_size, lines*sprite_size))
+        window = pygame.display.set_mode(((cols+1)*sprite_size, (lines+1)*sprite_size))
 
         game = Game(window, cols=cols, lines=lines, num_objects=num_objects, sprite_size=sprite_size)
         game.run()

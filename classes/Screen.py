@@ -55,6 +55,7 @@ class Screen:
                 self.window.blit(elem, (col*sprite_size, index*sprite_size))
 
         footer = Surface(((self.labyrinthe.num_cols-5)*sprite_size, sprite_size))
+        footer.fill([0, 0, 0])
 
         for i in self.labyrinthe.player.items:
             gfxdraw.aacircle(footer, int(i)*sprite_size, sprite_size//2, sprite_size//2 - 1, [255, 255,255])     
