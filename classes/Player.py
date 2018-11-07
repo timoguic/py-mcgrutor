@@ -1,7 +1,11 @@
+""" Module for player management """
+
 import random
 
 class Player:
-    def __init__(self, labyrinthe, line=0, col=0):
+    """ Player class """
+    def __init__(self, labyrinthe):
+        """ Constructor """
         self.symbol = 'M'
         self.items = []
         self.labyrinthe = labyrinthe
@@ -11,13 +15,16 @@ class Player:
         labyrinthe.set_symbol('M', self.line, self.column)
 
     def move(self, direction):
+        """ Move """
         self.line, self.column = self.labyrinthe.move_symbol('M', self.line, self.column, direction)
 
     def pickup(self, obj):
+        """ Pickup """
         self.items.append(obj)
         self.items.sort()
 
     def fight(self):
+        """ Fight """
         self.has_finished = True
 
         if len(self.items) >= 3:

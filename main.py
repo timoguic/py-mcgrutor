@@ -1,17 +1,19 @@
+""" MAIN PROGRAM FOR MCGYVER MAZE """
+
 import sys
 import configparser
 import pygame
-from classes.Game import Game
+from classes.game import Game
 
-if __name__ == '__main__':
+def main():
+    """ Main function """
     pygame.init()
     pygame.font.init()
-    pygame.key.set_repeat(0, 100)
 
     config = configparser.ConfigParser()
     config.read('mcgyver.conf')
 
-    if not 'McGyver' in config.sections():
+    if 'McGyver' not in config.sections():
         print('Please check your config file.')
         sys.exit(-1)
     else:
@@ -22,5 +24,9 @@ if __name__ == '__main__':
 
         window = pygame.display.set_mode(((cols+1)*sprite_size, (lines+1)*sprite_size))
 
-        game = Game(window, cols=cols, lines=lines, num_objects=num_objects, sprite_size=sprite_size)
+        game = Game(window, cols=cols, lines=lines, \
+            num_objects=num_objects, sprite_size=sprite_size)
         game.run()
+
+if __name__ == '__main__':
+    main()
