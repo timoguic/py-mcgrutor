@@ -4,13 +4,14 @@ import random
 
 class Player:
     """ Player class """
-    def __init__(self, labyrinthe):
+    def __init__(self, labyrinthe, num_objects):
         """ Constructor """
         self.symbol = 'M'
         self.items = []
         self.labyrinthe = labyrinthe
         self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
         self.has_finished, self.has_won = False, False
+        self.objects_needed = num_objects
 
         labyrinthe.set_symbol('M', self.line, self.column)
 
@@ -27,7 +28,5 @@ class Player:
         """ Fight """
         self.has_finished = True
 
-        if len(self.items) >= 3:
+        if len(self.items) >= self.objects_needed:
             self.has_won = True
-
-        self.has_won = True

@@ -18,6 +18,7 @@ class Game:
         self.current_screen = None
 
         self.init_screens(window)
+        self.display()
 
     def init_screens(self, window):
         """ Screen initialization """
@@ -73,7 +74,7 @@ class Game:
 
             if self.labyrinthe.player.has_finished and self.current_screen == 'game_screen':
                 self.current_screen = 'end_screen'
-                self.display()
+                self.display(has_won=self.labyrinthe.player.has_won)
 
             self.clock.tick(20)
 

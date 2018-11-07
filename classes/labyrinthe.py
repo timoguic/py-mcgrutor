@@ -30,7 +30,7 @@ class Labyrinthe:
         for i in range(1, num_objects+1):
             LabObject(i, self)
 
-        self.player = Player(self)
+        self.player = Player(self, num_objects)
         self.set_symbol('B', self.num_lines-1, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-2, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-1, self.num_cols-2)

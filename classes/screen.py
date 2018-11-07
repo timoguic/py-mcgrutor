@@ -55,13 +55,13 @@ class Screen:
                       sprite_size//2 - 3, [0, 0, 0])
                     self.window.blit(elem, (col*sprite_size, index*sprite_size))
                 elif symbol.isdigit() and int(symbol) > 0:
-                    #if self.never_displayed:
-                    for i in range(0, sprite_size):
-                        for j in range(0, sprite_size):
-                            pixel = Surface((1, 1))
-                            pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
-                            elem.blit(pixel, (i, j))
-                    self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                    if self.never_displayed:
+                        for i in range(0, sprite_size):
+                            for j in range(0, sprite_size):
+                                pixel = Surface((1, 1))
+                                pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
+                                elem.blit(pixel, (i, j))
+                        self.window.blit(elem, (col*sprite_size, index*sprite_size))
                 elif symbol == ' ':
                     elem.fill([255, 255, 255])
                     self.window.blit(elem, (col*sprite_size, index*sprite_size))
@@ -84,8 +84,38 @@ class Screen:
 
     def display_init(self):
         """ Init display """
-        self.window.fill([0, 0, 255])
+        self.window.fill([50, 30, 30])
+        myfont = Font(None, 36)
+        intro_text = 'Press <space> to continue...'
+        
+        txt_size = myfont.size(intro_text)
+        txt_surface = myfont.render(intro_text, 1, [255, 255, 255])
 
-    def display_end(self):
+        self.window.blit(txt_surface, ((self.window.get_width()-txt_size[0])//2, (self.window.get_height()-txt_size[1])//2))
+
+    def display_end(self, has_won=False):
         """ End display """
-        self.window.fill([0, 255, 0])
+
+        if has_won:
+            end_text = "Well done, captain!"
+            self.window.fill([0, 200, 200])
+            txt_color = [0, 0, 0]
+            self.display_centered_text(end_text, txt_color, 36, y_offset=-1)
+        else:
+            end_text = "Loser >__<"
+            self.window.fill([200, 30, 30])
+            txt_color = [0, 50, 50]
+            self.display_centered_text(end_text, txt_color, 36, y_offset=-1)
+
+        end_text = 'Press <space> to continue...'
+        self.display_centered_text(end_text, txt_color, 36, y_offset=1)
+
+    def display_centered_text(self, txt, color, size, y_offset=0):
+        myfont = Font(None, size)
+        txt_size = myfont.size(txt)
+        txt_surface = myfont.render(txt, 1, color)
+        pos_x = (self.window.get_width()-txt_size[0])//2
+        pos_y = (self.window.get_height()-txt_size[1])//2 + (y_offset*size)
+
+        self.window.blit(txt_surface, (pos_x, pos_y))
+        
