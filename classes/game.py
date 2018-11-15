@@ -6,7 +6,7 @@ from classes.screen import Screen
 
 class Game:
     """ Game class """
-    def __init__(self, window, lines=15, cols=15, num_objects=3, sprite_size=30):
+    def __init__(self, window, lines=15, cols=15, num_objects=3, sprite_size=30, density=0.75, complexity=0.75):
         """ Constructor """
         self.window = window
         self.clock = pygame.time.Clock()
@@ -16,13 +16,16 @@ class Game:
         self.num_objects = num_objects
         self.sprite_size = sprite_size
         self.current_screen = None
+        self.density = density
+        self.complexity = complexity
 
         self.init_screens(window)
         self.display()
 
     def init_screens(self, window):
         """ Screen initialization """
-        self.labyrinthe = Labyrinthe(lines=self.lines, cols=self.cols, num_objects=self.num_objects)
+        self.labyrinthe = Labyrinthe(lines=self.lines, cols=self.cols, num_objects=self.num_objects, \
+            density=self.density, complexity=self.complexity)
 
         screens_list = ('init_screen', 'game_screen', 'end_screen')
 
@@ -30,7 +33,7 @@ class Game:
             my_screen = Screen(window, i, labyrinthe=self.labyrinthe, sprite_size=self.sprite_size)
             setattr(self, i, my_screen)
 
-        self.current_screen = screens_list[0]
+        self.current_screen = screens_list[1]
 
     def run(self):
         """ Run method """

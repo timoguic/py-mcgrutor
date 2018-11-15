@@ -9,27 +9,25 @@ class LabObject:
     """ An object in the maze """
     def __init__(self, symbol, labyrinthe):
         """ Constructor """
-        if symbol == 42:
-            self.symbol = '!'
-            self.line = 10
-            self.column = 10
-        else:
-            self.symbol = str(symbol)
-            self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
+        self.symbol = str(symbol)
+        self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
         
         labyrinthe.set_symbol(self.symbol, self.line, self.column)
 
     def __str__(self):
         """ String representation """
         return '<{}({},{})>'.format(self.symbol, self.line, self.column)
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Labyrinthe:
     """ Maze class """
     EMPTY_SYMBOL = ' '
 
-    def __init__(self, lines=15, cols=15, num_objects=3):
+    def __init__(self, lines=15, cols=15, num_objects=3, density=0.75, complexity=0.75):
         """ Constructor """
-        self.level = maze(lines, cols)
+        self.level = maze(lines, cols, density, complexity)
 
         self.num_lines = len(self.level)
         self.num_cols = len(self.level[0])
@@ -39,16 +37,13 @@ class Labyrinthe:
         for i in range(1, num_objects+1):
             self.objects.append(LabObject(i, self))
 
-        self.objects.append(LabObject(42, self))
-
         self.player = Player(self, num_objects)
-        self.objects.append(self.player)
 
         self.set_symbol('B', self.num_lines-1, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-2, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-1, self.num_cols-2)
-        self.pathfinder = Pathfinder(self)
 
+        self.pathfinder = Pathfinder(self)
 
     def set_symbol(self, symbol, line, column):
         """ Setter function """
@@ -88,6 +83,7 @@ class Labyrinthe:
             new_line, new_col = line, column
         elif new_symbol.isdigit():
             self.player.pickup(new_symbol)
+            self.remove_item(new_line, new_col)
         elif new_symbol == 'B':
             self.player.fight()
 
@@ -97,6 +93,8 @@ class Labyrinthe:
 
         return new_line, new_col
 
+    def remove_item(self, line, col):
+        self.pathfinder.remove_object(line, col)
 
     @property
     def empty_positions(self):

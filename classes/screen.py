@@ -50,29 +50,19 @@ class Screen:
         elem.fill([200, 255, 200])
 
     def display_object(self, item, elem):
-        if self.never_displayed:
-            for i in range(0, self.sprite_size):
-                for j in range(0, self.sprite_size):
-                    pixel = Surface((1, 1))
-                    pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
-                    elem.blit(pixel, (i, j))
+        elem.fill([20, 220, 20])
+        # if True or self.never_displayed:
+        #     for i in range(0, self.sprite_size):
+        #         for j in range(0, self.sprite_size):
+        #             pixel = Surface((1, 1))
+        #             pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
+        #             elem.blit(pixel, (i, j))
 
     def display_empty(self, elem):
         elem.fill([255, 255, 255])
 
     def display_game(self):
         """ Display game """
-        for idx_l, line in enumerate(self.labyrinthe.level):
-            for idx_col, elm in enumerate(line):
-                if elm == '^':
-                    self.labyrinthe.level[idx_l][idx_col] = ' '
-        
-        self.labyrinthe.pathfinder.create_path(
-            (self.labyrinthe.player.line, self.labyrinthe.player.column),
-            (10, 10),
-            self.labyrinthe
-        )
-
         sprite_size = self.sprite_size
         myfont = Font(None, int(sprite_size * 1.2))
 
@@ -112,7 +102,6 @@ class Screen:
 
     def display_init(self):
         """ Init display """
-        print(self.window)
         self.window.fill([255, 30, 30])
         myfont = Font(None, 36)
         intro_text = 'Press <space> to continue...'

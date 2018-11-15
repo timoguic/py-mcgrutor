@@ -18,6 +18,7 @@ class Player:
     def move(self, direction):
         """ Move """
         self.line, self.column = self.labyrinthe.move_symbol('M', self.line, self.column, direction)
+        self.labyrinthe.pathfinder.find_path()
 
     def pickup(self, obj):
         """ Pickup """
