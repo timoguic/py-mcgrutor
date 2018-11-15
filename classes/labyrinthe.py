@@ -3,13 +3,20 @@
 import random
 from classes.maze_generator import maze
 from classes.player import Player
+from classes.pathfinder import Pathfinder
 
 class LabObject:
     """ An object in the maze """
     def __init__(self, symbol, labyrinthe):
         """ Constructor """
-        self.symbol = str(symbol)
-        self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
+        if symbol == 42:
+            self.symbol = '!'
+            self.line = 10
+            self.column = 10
+        else:
+            self.symbol = str(symbol)
+            self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
+        
         labyrinthe.set_symbol(self.symbol, self.line, self.column)
 
     def __str__(self):
@@ -27,13 +34,20 @@ class Labyrinthe:
         self.num_lines = len(self.level)
         self.num_cols = len(self.level[0])
 
+        self.objects = list()
+
         for i in range(1, num_objects+1):
-            LabObject(i, self)
+            self.objects.append(LabObject(i, self))
+
+        self.objects.append(LabObject(42, self))
 
         self.player = Player(self, num_objects)
+        self.objects.append(self.player)
+
         self.set_symbol('B', self.num_lines-1, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-2, self.num_cols-1)
         self.set_symbol(' ', self.num_lines-1, self.num_cols-2)
+        self.pathfinder = Pathfinder(self)
 
 
     def set_symbol(self, symbol, line, column):
@@ -70,7 +84,7 @@ class Labyrinthe:
             new_col = column + 1
 
         new_line, new_col, new_symbol = self.validate_coords(new_line, new_col)
-        if new_symbol == 'X':
+        if new_symbol == '|':
             new_line, new_col = line, column
         elif new_symbol.isdigit():
             self.player.pickup(new_symbol)
@@ -99,4 +113,11 @@ class Labyrinthe:
 
     def __str__(self):
         """ To string """
-        return '\n'.join(self.level)
+        return '\n'.join([
+            ''.join([
+                elem
+                for elem in line
+            ])
+            for line in self.level
+        ])
+        

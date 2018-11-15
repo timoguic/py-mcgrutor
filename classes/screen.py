@@ -28,8 +28,51 @@ class Screen:
 
         display_flip()
 
+    def display_wall(self, elem):
+        elem.fill([0, 0, 0])
+
+    def display_boss(self, elem):
+        elem.fill([255, 255, 255])
+        
+        gfxdraw.aacircle(elem, self.sprite_size//2, self.sprite_size//2, \
+            self.sprite_size//2 - 3, [255, 0, 0])
+        gfxdraw.filled_circle(elem, self.sprite_size//2, self.sprite_size//2, \
+            self.sprite_size//2 - 3, [255, 0, 0])
+
+    def display_player(self, elem):
+        elem.fill([255, 255, 255])
+        gfxdraw.aacircle(elem, self.sprite_size//2, self.sprite_size//2, \
+            self.sprite_size//2 - 3, [0, 0, 0])
+        gfxdraw.filled_circle(elem, self.sprite_size//2, self.sprite_size//2, \
+            self.sprite_size//2 - 3, [0, 0, 0])
+    
+    def display_path(self, elem):
+        elem.fill([200, 255, 200])
+
+    def display_object(self, item, elem):
+        if self.never_displayed:
+            for i in range(0, self.sprite_size):
+                for j in range(0, self.sprite_size):
+                    pixel = Surface((1, 1))
+                    pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
+                    elem.blit(pixel, (i, j))
+
+    def display_empty(self, elem):
+        elem.fill([255, 255, 255])
+
     def display_game(self):
         """ Display game """
+        for idx_l, line in enumerate(self.labyrinthe.level):
+            for idx_col, elm in enumerate(line):
+                if elm == '^':
+                    self.labyrinthe.level[idx_l][idx_col] = ' '
+        
+        self.labyrinthe.pathfinder.create_path(
+            (self.labyrinthe.player.line, self.labyrinthe.player.column),
+            (10, 10),
+            self.labyrinthe
+        )
+
         sprite_size = self.sprite_size
         myfont = Font(None, int(sprite_size * 1.2))
 
@@ -37,35 +80,20 @@ class Screen:
             for col, symbol in enumerate(line):
                 elem = Surface((sprite_size, sprite_size))
 
-                if symbol == 'X':
-                    elem.fill([0, 0, 0])
-                    self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                if symbol == '|':
+                    self.display_wall(elem)
                 elif symbol == 'B':
-                    elem.fill([255, 255, 255])
-                    gfxdraw.aacircle(elem, sprite_size//2, sprite_size//2, \
-                      sprite_size//2 - 3, [255, 0, 0])
-                    gfxdraw.filled_circle(elem, sprite_size//2, sprite_size//2, \
-                      sprite_size//2 - 3, [255, 0, 0])
-                    self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                    self.display_boss(elem)
                 elif symbol == 'M':
-                    elem.fill([255, 255, 255])
-                    gfxdraw.aacircle(elem, sprite_size//2, sprite_size//2, \
-                      sprite_size//2 - 3, [0, 0, 0])
-                    gfxdraw.filled_circle(elem, sprite_size//2, sprite_size//2, \
-                      sprite_size//2 - 3, [0, 0, 0])
-                    self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                    self.display_player(elem)
+                elif symbol == '^':
+                    self.display_path(elem)
                 elif symbol.isdigit() and int(symbol) > 0:
-                    if self.never_displayed:
-                        for i in range(0, sprite_size):
-                            for j in range(0, sprite_size):
-                                pixel = Surface((1, 1))
-                                pixel.fill([randint(50, 100), randint(150, 250), randint(0, 50)])
-                                elem.blit(pixel, (i, j))
-                        self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                    self.display_object(symbol, elem)
                 elif symbol == ' ':
-                    elem.fill([255, 255, 255])
-                    self.window.blit(elem, (col*sprite_size, index*sprite_size))
+                    self.display_empty(elem)
 
+                self.window.blit(elem, (col*sprite_size, index*sprite_size))
         self.never_displayed = False
         footer = Surface(((self.labyrinthe.num_cols-5)*sprite_size, sprite_size))
         footer.fill([0, 0, 0])
@@ -84,9 +112,11 @@ class Screen:
 
     def display_init(self):
         """ Init display """
-        self.window.fill([50, 30, 30])
+        print(self.window)
+        self.window.fill([255, 30, 30])
         myfont = Font(None, 36)
         intro_text = 'Press <space> to continue...'
+        print(intro_text)
         
         txt_size = myfont.size(intro_text)
         txt_surface = myfont.render(intro_text, 1, [255, 255, 255])

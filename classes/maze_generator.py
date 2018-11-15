@@ -40,7 +40,7 @@ def maze(width=81, height=51, complexity=.75, density=.75):
                     Z[y_ + (y - y_) // 2, x_ + (x - x_) // 2] = 1
                     x, y = x_, y_
 
-    return [['X' if i else ' ' for i in l] for l in Z.tolist()]
+    return [['|' if i else ' ' for i in l] for l in Z.tolist()]
 
 if __name__ == '__main__':
     print(maze(15, 15))
