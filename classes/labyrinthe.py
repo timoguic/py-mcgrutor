@@ -5,25 +5,29 @@ from classes.maze_generator import maze
 from classes.player import Player
 from classes.pathfinder import Pathfinder
 
+
 class LabObject:
     """ An object in the maze """
+
     def __init__(self, symbol, labyrinthe):
         """ Constructor """
         self.symbol = str(symbol)
         self.line, self.column = random.sample(labyrinthe.empty_positions, 1)[0]
-        
+
         labyrinthe.set_symbol(self.symbol, self.line, self.column)
 
     def __str__(self):
         """ String representation """
-        return '<{}({},{})>'.format(self.symbol, self.line, self.column)
-    
+        return "<{}({},{})>".format(self.symbol, self.line, self.column)
+
     def __repr__(self):
         return self.__str__()
 
+
 class Labyrinthe:
     """ Maze class """
-    EMPTY_SYMBOL = ' '
+
+    EMPTY_SYMBOL = " "
 
     def __init__(self, lines=15, cols=15, num_objects=3, density=0.75, complexity=0.75):
         """ Constructor """
@@ -34,14 +38,14 @@ class Labyrinthe:
 
         self.objects = list()
 
-        for i in range(1, num_objects+1):
+        for i in range(1, num_objects + 1):
             self.objects.append(LabObject(i, self))
 
         self.player = Player(self, num_objects)
 
-        self.set_symbol('B', self.num_lines-1, self.num_cols-1)
-        self.set_symbol(' ', self.num_lines-2, self.num_cols-1)
-        self.set_symbol(' ', self.num_lines-1, self.num_cols-2)
+        self.set_symbol("B", self.num_lines - 1, self.num_cols - 1)
+        self.set_symbol(" ", self.num_lines - 2, self.num_cols - 1)
+        self.set_symbol(" ", self.num_lines - 1, self.num_cols - 2)
 
         self.pathfinder = Pathfinder(self)
 
@@ -69,22 +73,22 @@ class Labyrinthe:
         new_line = line
         new_col = column
 
-        if direction == 'up':
+        if direction == "up":
             new_line = line - 1
-        elif direction == 'down':
+        elif direction == "down":
             new_line = line + 1
-        elif direction == 'left':
+        elif direction == "left":
             new_col = column - 1
-        elif direction == 'right':
+        elif direction == "right":
             new_col = column + 1
 
         new_line, new_col, new_symbol = self.validate_coords(new_line, new_col)
-        if new_symbol == '|':
+        if new_symbol == "|":
             new_line, new_col = line, column
         elif new_symbol.isdigit():
             self.player.pickup(new_symbol)
             self.remove_item(new_line, new_col)
-        elif new_symbol == 'B':
+        elif new_symbol == "B":
             self.player.fight()
 
         if new_line is not line or new_col is not column:
@@ -101,21 +105,14 @@ class Labyrinthe:
         """ Property that returns empty positions in the maze """
         ret = []
         for num_l, line in enumerate(self.level):
-            ret += [(num_l, num_c) for num_c, col in enumerate(line) if col == ' ']
+            ret += [(num_l, num_c) for num_c, col in enumerate(line) if col == " "]
 
         return set(ret)
 
     def __repr__(self):
         """ To string (Python) """
-        return '<Labyrinthe({}, {})>'.format(self.num_lines, self.num_cols)
+        return "<Labyrinthe({}, {})>".format(self.num_lines, self.num_cols)
 
     def __str__(self):
         """ To string """
-        return '\n'.join([
-            ''.join([
-                elem
-                for elem in line
-            ])
-            for line in self.level
-        ])
-        
+        return "\n".join(["".join([elem for elem in line]) for line in self.level])
